@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText"
+    tools:layout_height="match_parent"
+    tools:layout_width="match_parent"
+    tools:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout"
+    >
+  <com.google.android.material.appbar.MaterialToolbar
+      android:id="@+id/toolbar"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      style="@style/Widget.MaterialComponents.Toolbar.Primary"
+      />
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:text="Custom view which only allows emojis to be entered."
+      />
+  <Button
+      android:id="@+id/button"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:text="Trigger keyboard"
+      />
+  <com.vanniktech.emoji.EmojiCheckbox
+      android:id="@+id/forceSingleEmoji"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginHorizontal="8dp"
+      android:text="Force single Emoji 🔥"
+      tools:ignore="HardcodedText"
+      />
+  <com.vanniktech.emoji.EmojiEditText
+      android:id="@+id/editText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dp"
+      android:importantForAutofill="no"
+      tools:ignore="LabelFor,TextFields"
+      />
+</merge>

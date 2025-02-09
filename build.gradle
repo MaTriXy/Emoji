@@ -1,116 +1,64 @@
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'com.vanniktech.code.quality.tools'
-apply plugin: 'com.vanniktech.android.junit.jacoco'
-
 buildscript {
-  ext.kotlinVersion = '1.2.0'
-  ext.versions = [
-    espresso: '3.0.1',
-    testRules: '1.0.1',
-  ]
-
-  ext.deps = [
-    'support': [
-      'test': [
-        'espresso': [
-          'core': "com.android.support.test.espresso:espresso-core:${versions.espresso}",
-        ],
-        'runner': "com.android.support.test:runner:${versions.testRules}",
-        'rules': "com.android.support.test:rules:${versions.testRules}",
-      ],
-    ],
-    'fastLaneScreenGrab': "tools.fastlane:screengrab:1.1.0",
-  ]
-
   repositories {
-    jcenter()
+    mavenCentral()
     google()
+    gradlePluginPortal()
   }
   dependencies {
-    classpath 'com.vanniktech:gradle-code-quality-tools-plugin:0.8.0'
-    classpath 'com.vanniktech:gradle-android-junit-jacoco-plugin:0.11.0'
-
-    classpath 'com.android.tools.build:gradle:3.0.1'
-    classpath 'com.github.ben-manes:gradle-versions-plugin:0.17.0'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    classpath(libs.plugin.android.cache.fix)
+    classpath(libs.plugin.androidgradleplugin)
+    classpath(libs.plugin.dokka)
+    classpath(libs.plugin.kotlin)
+    classpath(libs.plugin.licensee)
+    classpath(libs.plugin.metalava)
+    classpath(libs.plugin.publish)
   }
+}
+
+plugins {
+  alias(libs.plugins.codequalitytools)
+  alias(libs.plugins.dependencygraphgenerator)
 }
 
 codeQualityTools {
   lint {
+    lintConfig = rootProject.file("lint.xml")
+    checkAllWarnings = true
     textReport = true
   }
   checkstyle {
-    toolVersion = '8.6'
+    enabled = false // Kotlin only.
   }
   pmd {
-    toolVersion = '6.0.0'
+   enabled = false // Kotlin only.
   }
   ktlint {
-    toolVersion = '0.14.0'
+    toolVersion = libs.versions.ktlint.get()
   }
   detekt {
-    toolVersion = '1.0.0.RC6'
+    enabled = false
   }
-  errorProne {
-    toolVersion = '2.1.2'
+  cpd {
+    enabled = false
   }
 }
 
-junitJacoco {
-    // Don't care about sample and generated modules
-    ignoreProjects = ['app', 'emoji-ios', 'emoji-google', 'emoji-twitter', 'emoji-one', 'emoji-compat', 'emoji-kotlin']
-}
-
-subprojects {
+allprojects {
   repositories {
-      jcenter()
-      google()
-      mavenCentral()
+    google()
+    mavenCentral()
+    gradlePluginPortal()
   }
-
-  group = GROUP
-  version = VERSION_NAME
-}
-
-ext {
-  minSdkVersion = 15
-  compileSdkVersion = 27
-  targetSdkVersion = 27
-
-  supportLibraryVersion = '27.0.2'
-  leakCanaryVersion = '1.5.1'
-
-  versionCode = VERSION_CODE
-  versionName = VERSION_NAME
-
-  supportAppCompat = "com.android.support:appcompat-v7:$supportLibraryVersion"
-  supportV4CoreUi = "com.android.support:support-core-ui:$supportLibraryVersion"
-  supportV4Compat = "com.android.support:support-compat:$supportLibraryVersion"
-  supportRecyclerView = "com.android.support:recyclerview-v7:$supportLibraryVersion"
-  supportCardView = "com.android.support:cardview-v7:$supportLibraryVersion"
-  supportAnnotations = "com.android.support:support-annotations:$supportLibraryVersion"
-  supportEmoji = "com.android.support:support-emoji:$supportLibraryVersion"
-  supportEmojiBundled = "com.android.support:support-emoji-bundled:$supportLibraryVersion"
-
-  leakCanaryDebug = "com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion"
-  leakCanaryRelease = "com.squareup.leakcanary:leakcanary-android-no-op:$leakCanaryVersion"
-
-  testing = [
-          junit             : 'junit:junit:4.12',
-          robolectric       : 'org.robolectric:robolectric:3.5.1',
-          privateConstructor: 'com.pushtorefresh.java-private-constructor-checker:checker:1.2.0',
-          assertJ           : 'org.assertj:assertj-core:3.8.0'
-  ]
-
-  javaVersion = JavaVersion.VERSION_1_7
-}
-
-task wrapper(type: Wrapper) {
-  gradleVersion = '4.4'
-  distributionType = Wrapper.DistributionType.ALL
 }
 
 subprojects {
-  task allDependencies(type: DependencyReportTask) {}
+  plugins.withType(com.android.build.gradle.api.AndroidBasePlugin) {
+    project.apply plugin: "org.gradle.android.cache-fix"
+  }
+
+  project.tasks.withType(Test) {
+    testLogging {
+      testLogging.exceptionFormat = "full"
+    }
+  }
 }

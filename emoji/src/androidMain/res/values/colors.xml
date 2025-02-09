@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <color name="emoji_background_color">@color/emoji_white</color>
+  <color name="emoji_divider_color">#ffcccccc</color>
+  <color name="emoji_text_color">@color/emoji_black</color>
+  <color name="emoji_text_secondary_color">#99000000</color>
+  <color name="emoji_primary_color">#FF9800</color>
+  <color name="emoji_secondary_color">#673AB7</color>
+
+  <color name="emoji_white">#ffffffff</color>
+  <color name="emoji_black">#ff000000</color>
+</resources>
